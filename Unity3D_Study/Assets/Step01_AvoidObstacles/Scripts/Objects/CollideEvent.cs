@@ -7,10 +7,17 @@ public class CollideEvent : MonoBehaviour
     private bool            isCollide = false;
 
     private MeshRenderer meshRenderer;
+    private Color        matOriginColor;
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        matOriginColor = meshRenderer.material.color;
     }
+
+    private void OnDisable()
+    {
+        meshRenderer.material.color = matOriginColor;
+        isCollide = false;    }
 
     private void OnCollisionEnter(Collision collision)
     {
