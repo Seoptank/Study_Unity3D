@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
 
-    private Movement3D movement;
+    //private Movement3D movement;
 
     private void Awake()
     {
@@ -18,12 +18,12 @@ public class PlayerController : MonoBehaviour
         else Destroy(this);
         #endregion
 
-        movement = GetComponent<Movement3D>();
+        //movement = GetComponent<Movement3D>();
     }
 
     private void Update()
     {
-        MovePlayer();
+        //MovePlayer();
     }
 
     private void MovePlayer()
@@ -31,6 +31,6 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        movement.MoveTo(x, z);
+        //movement.MoveTo(x, z);
     }
 }
