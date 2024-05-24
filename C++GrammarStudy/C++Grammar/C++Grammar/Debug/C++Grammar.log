@@ -1,2 +1,5 @@
 ﻿  C++Grammar.cpp
-  C++Grammar.vcxproj -> C:\Users\cnpdi\Desktop\Study_Unity3D\C++GrammarStudy\C++Grammar\Debug\C++Grammar.exe
+  소스.cpp
+C:\Users\cnpdi\OneDrive\바탕 화면\Portfolio\Unity_3D\Study_Unity3D\C++GrammarStudy\C++Grammar\C++Grammar\소스.cpp(6,1): fatal error C1004: 예기치 않은 파일의 끝이 나타났습니다.
+  코드를 생성하고 있습니다...
+C:\Users\cnpdi\OneDrive\바탕 화면\Portfolio\Unity_3D\Study_Unity3D\C++GrammarStudy\C++Grammar\C++Grammar\C++Grammar.cpp(128): error C4700: 초기화되지 않은 'count' 지역 변수를 사용했습니다.

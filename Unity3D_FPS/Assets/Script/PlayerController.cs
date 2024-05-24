@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     [Header("Input Key")]
     [SerializeField]
     private KeyCode     runKey = KeyCode.LeftShift;
+    [SerializeField]
+    private KeyCode     jumpKey = KeyCode.Space;
 
     private RotateToMouse               rotateToMouses;
     private MovementCharacterController movement;
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateRotation();
         UpdateMove();
+        UpdateJump();
     }
 
     private void UpdateMove()
@@ -73,5 +76,10 @@ public class PlayerController : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y");
 
         rotateToMouses.UpdateToRotate(mouseX, mouseY);
+    }
+    private void UpdateJump()
+    {
+        if (Input.GetKeyDown(jumpKey))
+            movement.JumpTo();
     }
 }

@@ -2,9 +2,6 @@
 
 using namespace std;
 
-
-
-
 void VariableAndCalculation()
 {
 	// [타입][이름]
