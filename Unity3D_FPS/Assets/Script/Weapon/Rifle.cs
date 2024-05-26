@@ -23,9 +23,11 @@ public class Rifle : MonoBehaviour
     [SerializeField]
     private GameObject      fireEffect;     // 총구 Effect
 
-    [Header("Casing Spawn")]
+    [Header("Spawn Pos")]
     [SerializeField]
     private Transform       casingSpawnPos; // 탄피 생성 위치
+    [SerializeField]
+    private Transform       bulletSpawnPos; // 총알 생성 위치
 
     [Header("Audio Clips")]
     [SerializeField]
@@ -41,6 +43,8 @@ public class Rifle : MonoBehaviour
     private AudioSource         audioSource;
     private PlayerAniController anim;
     private CasingPool          casingPool;
+    private ImpactPool          impactPool;
+    private Camera              mainCam;
 
     public WeaponName   WeaponName => weaponSetting.name;
     public int          CurMagazine => weaponSetting.curMagazine;
@@ -48,8 +52,11 @@ public class Rifle : MonoBehaviour
 
     private void Awake()
     {
+        mainCam = Camera.main;
+
         audioSource = GetComponent<AudioSource>();
         casingPool  = GetComponent<CasingPool>();
+        impactPool  = GetComponent<ImpactPool>();
         anim        = GetComponentInParent<PlayerAniController>();
 
         // 탄수/ 탄창 수 최대로 설정
@@ -174,9 +181,41 @@ public class Rifle : MonoBehaviour
 
             // Casing 진행
             casingPool.SpawnCaing(casingSpawnPos, transform.right);
+
+            Shoot();
         }
     }
 
+    private void Shoot()
+    {
+        Ray         ray;
+        RaycastHit  hit;
+        Vector3     targetPos = Vector3.zero;
+
+        // 화면 중앙 좌표
+        ray = mainCam.ViewportPointToRay(Vector2.one * 0.5f);
+
+        // 공격 사거리 내 부딪히는 물체가 있음
+        if (Physics.Raycast(ray, out hit, weaponSetting.attackDistance))
+            targetPos = hit.point;
+        // 공격 사거리 내 부딪히는 물체가 없음
+        else
+            targetPos = ray.origin + ray.direction * weaponSetting.attackDistance;
+        Debug.DrawRay(ray.origin, ray.direction * weaponSetting.attackDistance, Color.red);
+
+        // 첫번째 Raycast연산으로 얻어진 targetPos를 목표로 설정하고 총구 시작점부터 Raycast연산
+        Vector3 atkDir = (targetPos - bulletSpawnPos.position).normalized;
+        if (Physics.Raycast(bulletSpawnPos.position, atkDir, out hit, weaponSetting.attackDistance))
+        {
+            impactPool.SpawnImpact(hit);
+
+            if(hit.transform.CompareTag("Enemy"))
+            {
+                hit.transform.GetComponent<EnemyAI>().TakeDmg(weaponSetting.weaponDmg);
+            }
+        }
+        Debug.DrawRay(bulletSpawnPos.position, atkDir * weaponSetting.attackDistance, Color.blue);
+    }
     private IEnumerator OnFireEffect()
     {
         fireEffect.SetActive(true);

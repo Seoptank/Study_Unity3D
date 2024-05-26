@@ -7,6 +7,7 @@ public enum WeaponName
 public struct WeaponSetting
 {
     public WeaponName name;             // 무기 이름
+    public int      weaponDmg;          // 무기 피해
     public int      curAmmo;            // 현재 탄수
     public int      maxAmmo;            // 최재 탄수
     public int      curMagazine;        // 현재 탄창 수 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,7 +8,9 @@ public class PlayerHUD : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField]
-    private Rifle weapon;        
+    private Rifle   weapon;
+    [SerializeField]
+    private Status  status;
 
     [Header("Weapon")]
     [SerializeField]
@@ -25,6 +28,16 @@ public class PlayerHUD : MonoBehaviour
     
     private List<GameObject>    magazineList;       // 탄창 UI 리스트
 
+    [Header("HP And BloodScreen")]
+    [SerializeField]
+    private TextMeshProUGUI     textHP;             // 체력 Text;
+    [SerializeField]
+    private Image               imageHPSlide;       // HP 슬라이드
+    [SerializeField]
+    private Image               imageBloodScreen;   // 블러드 스크린
+    [SerializeField]
+    private AnimationCurve      curveBloodScreen;   // 블러드 스크린 애니메이션 커브
+
     private void Awake()
     {
         SetupWeapon();
@@ -32,6 +45,8 @@ public class PlayerHUD : MonoBehaviour
 
         weapon.onAmmoEvent.AddListener(UpdateAmmoHUD);
         weapon.onMagazineEvent.AddListener(UpdateMagazineHUD);
+
+        status.onHPEvent.AddListener(UpdateHPHUD);
     }
 
     private void SetupWeapon()
@@ -75,6 +90,36 @@ public class PlayerHUD : MonoBehaviour
         for (int i = 0; i < curMagazine; ++i)
         {
             magazineList[i].SetActive(true);
+        }
+    }
+
+    private void UpdateHPHUD(int preHP,int curHP)
+    {
+        textHP.text = curHP.ToString();
+
+        float fillAmount = (float)curHP / status.MaxHP;
+        imageHPSlide.fillAmount = fillAmount;
+
+        if (preHP - curHP > 0)
+        {
+            StopCoroutine("OnBloodScreen");
+            StartCoroutine("OnBloodScreen");
+        }
+    }
+
+    private IEnumerator OnBloodScreen()
+    {
+        float percent = 0;
+
+        while(percent < 1)
+        {
+            percent += Time.deltaTime;
+
+            Color color             = imageBloodScreen.color;
+            color.a                 = Mathf.Lerp(1, 0, curveBloodScreen.Evaluate(percent));
+            imageBloodScreen.color  = color;
+
+            yield return null;
         }
     }
 }

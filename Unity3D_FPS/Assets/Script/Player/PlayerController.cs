@@ -135,4 +135,14 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(reloadKey))
             rifle.StartReload();
     }
+
+    public void TakeDmg(int dmg)
+    {
+        bool isDie = status.DecreaseHP(dmg);
+
+        if(isDie)
+        {
+            Debug.Log("Die");
+        }
+    }
 }

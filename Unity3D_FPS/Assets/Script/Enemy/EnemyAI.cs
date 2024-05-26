@@ -18,11 +18,15 @@ public class EnemyAI : MonoBehaviour
     [SerializeField]
     private float           setDirectionSpeed;
 
+    [SerializeField]
+    private PlayerController player;
 
-    private Transform       target;
-    private NavMeshAgent    nav;
-    private Animator        ani;
-    private Status          status;
+    private bool                ableToAttack = false;
+
+    private Transform           target;
+    private NavMeshAgent        nav;
+    private Animator            ani;
+    private Status              status;
     private void Awake()
     {
         nav     = GetComponent<NavMeshAgent>();
@@ -137,6 +141,15 @@ public class EnemyAI : MonoBehaviour
             ChangeState(EnemyState.Idle);
         }
     }
+    public void TakeDmg(int dmg)
+    {
+        bool isDie = status.DecreaseHP(dmg);
+
+        if (isDie)
+        {
+            Debug.Log("Á»ºñ Á×À½!!!");
+        }
+    }
 
     private IEnumerator Chase()
     {
@@ -169,6 +182,19 @@ public class EnemyAI : MonoBehaviour
             CalculateDisToTargetAndSelectState();
 
             yield return null;
+        }
+    }
+
+    public void AttackEffect()
+    {
+        Vector3 originPos = transform.position;
+        Vector3 targetPos = target.position;
+
+        float dis = Vector3.Distance(originPos, targetPos);
+
+        if(dis < attackRadius)
+        {
+            player.TakeDmg(20);
         }
     }
 
